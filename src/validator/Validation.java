@@ -1,5 +1,5 @@
 
-package fruitshop;
+package validator;
 
 import java.util.Scanner;
 
@@ -18,7 +18,7 @@ public class Validation {
                 int number = Integer.parseInt(input);
                 //check range of number
                 if (number < min || number > max) {
-                    System.out.print("Please input between " + min + ", " + max + ": ");
+                    System.out.print("Please input!: ");
                     continue;
                 }
                 return number;
@@ -28,35 +28,48 @@ public class Validation {
         }
     }
     
-    public double inputDouble(String mess, double min, double max) {
-        System.out.print(mess);
-        while(true) {
-            String input = sc.nextLine();
-            try {
-                double number = Double.parseDouble(input);
-                //check range of number
-                if (number < min || number > max) {
-                    System.out.print("Please input between " + min + ", " + max + ": ");
-                    continue;
-                }
-                return number;
-            } catch (Exception e) {
-                System.out.print("Please input an double number: ");
-            }
-        }
-    }
     
-    public String inputString(String mess,String regex) {
-        System.out.print(mess);
-        while(true) {
-            String input = sc.nextLine();
-            if (!input.matches(regex)) {
-                System.out.print("Please input match regex("+regex+").");
+
+public double inputDouble(String mess, double min, double max) {
+    System.out.print(mess);
+    while (true) {
+        String input = sc.nextLine().trim();
+
+        try {
+            double number = Double.parseDouble(input);
+
+            if (!Double.isFinite(number)
+                    || number < min || number > max) {
+                System.out.print(
+                    "Please input!: ");
                 continue;
             }
-            return input;
+            return number;
+        } catch (NumberFormatException e) {
+            System.out.print(
+                "Invalid number!: ");
         }
     }
+}
+
+
+    
+    
+public String inputString(String mess, String regex) {
+    System.out.print(mess);
+    while (true) {
+        String input = sc.nextLine().trim();
+
+        if (input.isEmpty() || !input.matches(regex)) {
+            System.out.print(
+                "Please input match regex(" + regex + "):"
+            );
+            continue;
+        }
+        return input;
+    }
+}
+
     
 
     

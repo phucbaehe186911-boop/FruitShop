@@ -1,5 +1,8 @@
 
-package fruitshop;
+package main;
+
+import manager.Manager;
+import validator.Validation;
 
 
 public class main {

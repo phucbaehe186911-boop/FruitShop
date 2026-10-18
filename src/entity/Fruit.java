@@ -1,5 +1,5 @@
 
-package fruitshop;
+package entity;
 
 
 public class Fruit {
@@ -47,12 +47,16 @@ public class Fruit {
         return price;
     }
 
-    public void setPrice(double price) {
-        if (price <= 0) {
-            throw new IllegalArgumentException("Price must be greater than 0!");
-        }
-        this.price = price;
+    
+public void setPrice(double price) {
+    if (!Double.isFinite(price) || price <= 0) {
+        throw new IllegalArgumentException(
+            "Price must be a finite number greater than 0!"
+        );
     }
+    this.price = price;
+}
+
 
     public int getQuantity() {
         return quantity;

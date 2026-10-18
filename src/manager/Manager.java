@@ -1,6 +1,8 @@
 
-package fruitshop;
+package manager;
 
+import entity.Fruit;
+import validator.Validation;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -13,32 +15,67 @@ public class Manager {
     Validation validation = new Validation();
 
     public Fruit getFruitById(String id) {
-        for (Fruit fruit : fruits) {
-            if (id.equals(fruit.getFruitId())) {
-                return fruit;
-            }
+    for (Fruit fruit : fruits) {
+        if (id != null
+                && id.trim().equalsIgnoreCase(fruit.getFruitId())) {
+            return fruit;
         }
-        return null;
     }
+    return null;
+}
+    
+    public Fruit getFruitByName(String name) {
+    for (Fruit fruit : fruits) {
+        if (name.trim().equalsIgnoreCase(fruit.getFruitName())) {
+            return fruit;
+        }
+    }
+    return null;
+}
 
-    public void createFruit() {
+    
+
+public void createFruit() {
+    while (true) {
+        String fruitId = validation.inputString(
+        "Enter id:", "[A-Za-z][0-9]+");
+
+        if (getFruitById(fruitId) != null) {
+            System.out.println("ID is existed");
+            continue;
+        }
+
+        String fruitName;
         while (true) {
-            String fruitId = validation.inputString("Enter id:", ".+");
+            fruitName = validation.inputString(
+                    "Enter name:", "[A-Za-z\\s]+");
 
-            if (getFruitById(fruitId) != null) {
-                System.out.println("ID is existed");
+            if (getFruitByName(fruitName) != null) {
+                System.out.println("Fruit name is existed");
                 continue;
             }
-            String fruitName = validation.inputString("Enter name:", "[A-Za-z\\s]+");
-            double price = validation.inputDouble("Enter price:", 1, Double.MAX_VALUE);
-            int quantity = validation.inputInt("Enter quantity:", 1, Integer.MAX_VALUE);
-            String origin = validation.inputString("Enter origin:", "[A-Za-z\\s]+");
-            fruits.add(new Fruit(fruitId, fruitName, price, quantity, origin));
-            if (!validation.checkInputYN("Do you want to continue?")) {
-                break;
-            }
+            break;
+        }
+
+        double price = validation.inputDouble(
+                "Enter price:", 1, Double.MAX_VALUE);
+
+        int quantity = validation.inputInt(
+                "Enter quantity:", 1, Integer.MAX_VALUE);
+
+        String origin = validation.inputString(
+                "Enter origin:", "[A-Za-z\\s]+");
+
+        fruits.add(new Fruit(
+                fruitId, fruitName, price, quantity, origin));
+
+        if (!validation.checkInputYN("Do you want to continue?")) {
+            break;
         }
     }
+}
+
+
 
     public int displayListFruit() {
         int countItem = 0;
@@ -64,18 +101,20 @@ public class Manager {
 
     }
 
-    public Fruit getFruit(int item) {
-        int count = 0;
-        for (Fruit fruit : fruits) {
-            if (fruit.getQuantity() != 0) {
-                count++;
-            }
+    
+public Fruit getFruit(int item) {
+    int count = 0;
+    for (Fruit fruit : fruits) {
+        if (fruit.getQuantity() > 0) {
+            count++;
             if (item == count) {
                 return fruit;
             }
         }
-        return null;
     }
+    return null;
+}
+
 
     public Fruit checkFruitInOrder(ArrayList<Fruit> listOrder, String id) {
         for (Fruit fruit : listOrder) {
@@ -97,7 +136,9 @@ public class Manager {
             }
             Fruit fruit = getFruit(item);
             System.out.println("You selected:" + fruit.getFruitName());
-            int quantity = validation.inputInt("Enter quantity:", 0, fruit.getQuantity());
+            int quantity = validation.inputInt(
+                          "Enter quantity:", 1, fruit.getQuantity()
+             );
             fruit.setQuantity(fruit.getQuantity() - quantity);
             Fruit fruitInOrder = checkFruitInOrder(listOrder, fruit.getFruitId());
             if (fruitInOrder != null) {
